@@ -1,0 +1,627 @@
+[
+  {
+    "url": "https://www.vidi.hr/Non-Tech/Svijet/Njemacka-zabranjuje-djecje-pametne-satove",
+    "title": "Njemačka zabranjuje dječje pametne satove",
+    "entities": {
+      "standard": {
+        "ORG": [
+          "VTech",
+          "IoT",
+          "Google",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "BNetzA",
+          "Googlea",
+          "Facebooku",
+          "AM General",
+          "DIP Državno izborno povjerenstvo",
+          "Savezna agencija za mrežne djelatnosti  BNetzA",
+          "Nerdalize",
+          "Eneco",
+          "Ruska banka"
+        ],
+        "PER": [
+          "Nizozemcima",
+          "Hrvati",
+          "Jochen Homann"
+        ],
+        "LOC": [
+          "Njemačke",
+          "Hrvatskoj",
+          "Japanu",
+          "SAD-u",
+          "Francuskoj",
+          "Rusiji",
+          "Europi",
+          "Indija",
+          "Srednji istok",
+          "Kina"
+        ],
+        "MISC": [
+          "Borderlandsu 3",
+          "Humweea",
+          "Pact"
+        ]
+      },
+      "custom": {}
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Racunala/Novosti/Prijevara-umjetne-inteligencije-poezijom",
+    "title": "Prijevara umjetne inteligencije poezijom",
+    "entities": {
+      "standard": {
+        "PER": [
+          "Nizozemcima",
+          "Hrvati",
+          "Icaro Laba"
+        ],
+        "LOC": [
+          "Hrvatskoj",
+          "Japanu",
+          "SAD-u",
+          "Francuskoj",
+          "Indija",
+          "Europi",
+          "Srednji istok",
+          "Rima",
+          "Kina"
+        ],
+        "ORG": [
+          "Metu",
+          "Google",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Googlea",
+          "LLM-ova",
+          "Facebooku",
+          "OpenAI",
+          "LLM-ovima",
+          "Mistral AI",
+          "DIP Državno izborno povjerenstvo",
+          "Nerdalize",
+          "xAI",
+          "ASR-a",
+          "Eneco"
+        ],
+        "MISC": [
+          "NVIDIA RTX GPU-ove",
+          "Pact",
+          "Borderlandsu 3",
+          "MLCommons AILuminate Benchmark",
+          "Gen 5 Elite SoC-a",
+          "AI-ja"
+        ]
+      },
+      "custom": {
+        "TECH": [
+          "NVIDIA RTX GPU-ove",
+          "LLM-ova",
+          "MLCommons AILuminate Benchmark",
+          "OpenAI",
+          "LLM-ovima",
+          "Mistral AI",
+          "xAI",
+          "AI-ja"
+        ]
+      }
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Non-Tech/Hrvatska/Sto-su-Hrvati-najvise-guglali-2015",
+    "title": "Što su Hrvati najviše guglali 2015.",
+    "entities": {
+      "standard": {
+        "LOC": [
+          "Ragbiju",
+          "Hrvatsku",
+          "Parizu",
+          "Hrvatskoj",
+          "Hrvatske",
+          "Japanu",
+          "SAD-u",
+          "Francuskoj",
+          "Indija",
+          "Europi",
+          "Srednji istok",
+          "Kina"
+        ],
+        "ORG": [
+          "Googleov",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Googlea",
+          "Google",
+          "Facebooku",
+          "DIP Državno izborno povjerenstvo",
+          "Nerdalize",
+          "Eneco"
+        ],
+        "PER": [
+          "Nizozemcima",
+          "Hrvati"
+        ],
+        "MISC": [
+          "Svjetsko nogometno prvenstvo",
+          "Pact",
+          "Borderlandsu 3",
+          "Sata kodiranja",
+          "Svjetsko prvenstvo u Kriketu",
+          "Ratovi zvijezda",
+          "Oscar",
+          "Dell Alienware 17"
+        ]
+      },
+      "custom": {
+        "PRODUCT": [
+          "Dell Alienware 17"
+        ]
+      }
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Lifestyle/Business-3.0/Hrvatski-Abysalto-u-Danskoj-predstavio-seamless-city-usluge",
+    "title": "Hrvatski Abysalto u Danskoj predstavio seamless city usluge",
+    "entities": {
+      "standard": {
+        "LOC": [
+          "Benelux",
+          "Kopenhagenu Abysalto",
+          "Kopenhagena",
+          "Hrvatskoj",
+          "Hrvatska",
+          "Japanu",
+          "Abysalta",
+          "SAD-u",
+          "Zagrebu",
+          "Danske",
+          "Kopenhagenu",
+          "Splitu",
+          "Francuskoj",
+          "Europi",
+          "Indija",
+          "Srednji istok",
+          "Regije",
+          "Kina"
+        ],
+        "ORG": [
+          "Capital Region",
+          "Future Tense",
+          "Abysalto",
+          "Google",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Googlea",
+          "Facebooku",
+          "HAC",
+          "Abysalta",
+          "DIP Državno izborno povjerenstvo",
+          "Nerdalize",
+          "FER-ov Zavod za elektrostrojarstvo i automatizaciju",
+          "Eneco"
+        ],
+        "PER": [
+          "Ian Keaveny",
+          "Abysalto",
+          "Hrvati",
+          "Nizozemcima"
+        ],
+        "MISC": [
+          "Pact",
+          "Borderlandsu 3",
+          "ASTS Abysalto Smart Transit Solution",
+          "eTicketinga",
+          "SaaS",
+          "SEMS Smart Energy Management Solution",
+          "Seamless City Experience"
+        ]
+      },
+      "custom": {}
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Sci-Tech/Znanost/Zena-koja-priprema-Artemis-II-za-Mjesec",
+    "title": "Žena koja priprema Artemis II za Mjesec",
+    "entities": {
+      "standard": {
+        "PER": [
+          "Branelle Rodriguez",
+          "Nizozemcima",
+          "Rodriguez",
+          "Johnson",
+          "Hrvati",
+          "Artemis II"
+        ],
+        "MISC": [
+          "ESA-in Jupiter Icy Moons Explorer Juice",
+          "Orion za let",
+          "Pact",
+          "Borderlandsu 3",
+          "Space Shuttle",
+          "Artemis II Orion",
+          "Orion",
+          "Artemis II"
+        ],
+        "LOC": [
+          "Johnsonu",
+          "Mjesec",
+          "Japanu",
+          "Hrvatskoj",
+          "SAD-u",
+          "Minnesoti",
+          "Francuskoj",
+          "Houstonu",
+          "Alabami",
+          "Europi",
+          "Indija",
+          "Mjesecu",
+          "Srednji istok",
+          "Kennedyju",
+          "Kina"
+        ],
+        "ORG": [
+          "Dow Chemicalu",
+          "NASA-in",
+          "Google",
+          "Uprave za inženjerstvo",
+          "Odjelu za inženjerstvo centra",
+          "SLS",
+          "Sveučilištu Sjeverne Dakote",
+          "Međunarodne svemirske",
+          "Nerdalize",
+          "NASA",
+          "NASA-i",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Odjelu za posadu",
+          "Facebooku",
+          "Eneco",
+          "NASA-inom",
+          "Exploration Ground Systems",
+          "Googlea",
+          "Međunarodnoj svemirskoj postaji",
+          "Svemirsku akademiju u Huntsvilleu",
+          "DIP Državno izborno povjerenstvo",
+          "NASA-inom svemirskom centru Kennedy"
+        ]
+      },
+      "custom": {}
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Racunala/Novosti/Izgradnja-datacentara-za-AI-je-neodrziva",
+    "title": "Izgradnja datacentara za AI je neodrživa",
+    "entities": {
+      "standard": {
+        "ORG": [
+          "GPU-i",
+          "The Vergeu",
+          "DeepSeek-R1",
+          "Google",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Googlea",
+          "CPU-ima",
+          "Facebooku",
+          "GPU-ima",
+          "IBM-a",
+          "DIP Državno izborno povjerenstvo",
+          "Nerdalize",
+          "Decoder",
+          "Eneco"
+        ],
+        "PER": [
+          "Krishna",
+          "Nizozemcima",
+          "Arvind Krishna",
+          "Hrvati"
+        ],
+        "MISC": [
+          "Mistral Large 3",
+          "Pact",
+          "Borderlandsu 3",
+          "CPU-u",
+          "B2C",
+          "QPU",
+          "LLM",
+          "Kimi K2 Thinking",
+          "Nvidijinom GB200 NVL72"
+        ],
+        "LOC": [
+          "Koreji",
+          "Hrvatskoj",
+          "Japanu",
+          "Europu",
+          "SAD-u",
+          "Francuskoj",
+          "Indija",
+          "Europi",
+          "SAD",
+          "Srednji istok",
+          "Kina"
+        ]
+      },
+      "custom": {
+        "TECH": [
+          "GPU-i",
+          "CPU-u",
+          "CPU-ima",
+          "GPU-ima",
+          "LLM"
+        ],
+        "PRODUCT": [
+          "Nvidijinom GB200 NVL72"
+        ]
+      }
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Vidi-grupa/VIDI-Lab/Samsung-Galaxy-S25-Ultra",
+    "title": "",
+    "entities": {
+      "standard": {
+        "MISC": [
+          "Orion za let",
+          "Pact",
+          "Borderlandsu 3",
+          "Startup Amogy",
+          "Imagination DXD GPU",
+          "Killing Floor 3",
+          "NASA",
+          "Paramounta"
+        ],
+        "LOC": [
+          "Kina",
+          "Koreji",
+          "Hrvatskoj",
+          "Japanu",
+          "Europu",
+          "SAD-u",
+          "Francuskoj",
+          "Mars",
+          "Europi",
+          "Indija",
+          "SAD",
+          "Srednji istok",
+          "Aziji"
+        ],
+        "ORG": [
+          "Synduality Echo of Ada",
+          "Garmin",
+          "LEGO Horizon Adventures",
+          "MIT-a",
+          "Neon White",
+          "Google",
+          "Netflixa",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Facebooku",
+          "Googlea",
+          "Warner Bros",
+          "The Outlast Trials",
+          "DIP Državno izborno povjerenstvo",
+          "Nerdalize",
+          "Eneco"
+        ],
+        "PER": [
+          "Branelle Rodriguez",
+          "Nizozemcima",
+          "Hrvati",
+          "Artemis II",
+          "Donald Trump"
+        ]
+      },
+      "custom": {
+        "TECH": [
+          "Imagination DXD GPU"
+        ]
+      }
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Racunala/Novosti/MoE-modeli-rade-10-puta-brze-na-Nvidia-Blackwell-NVL72",
+    "title": "MoE modeli rade 10 puta brže na Nvidia Blackwell NVL72",
+    "entities": {
+      "standard": {
+        "MISC": [
+          "Mistral Large 3 MoE",
+          "DeepSeek-R1",
+          "AI",
+          "Nvidia GB200 NVL72",
+          "Crusoe",
+          "Moonshot AI-jev",
+          "MoE",
+          "NVLink Switcha",
+          "Mistral Large 3",
+          "Core42",
+          "CoreWeave",
+          "Nvidia Blackwell GPU-a",
+          "GB200 NVL72",
+          "Amazon Web Services",
+          "Kimi K2 Thinking",
+          "Nvidijinom GB200 NVL72",
+          "Lambda",
+          "Microsoft Azure",
+          "DeepSeek AI-jev DeepSeek-R1",
+          "Nscale",
+          "Google Cloud",
+          "Imagination DXD GPU",
+          "Nebius",
+          "Nvidia Cloud",
+          "OpenAI-jev gpt-oss-120B",
+          "Kimi K2 Thinking MoE",
+          "Nvidia HGX H200",
+          "Oracle Cloud Infrastructure",
+          "Pact",
+          "Borderlandsu 3",
+          "Together AI",
+          "Mistral AI-jev Mistral Large 3"
+        ],
+        "ORG": [
+          "Google",
+          "DeepSeek-R1",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Nvidia",
+          "Facebooku",
+          "Googlea",
+          "MoE",
+          "DIP Državno izborno povjerenstvo",
+          "Nerdalize",
+          "Eneco"
+        ],
+        "LOC": [
+          "Koreji",
+          "Hrvatskoj",
+          "Japanu",
+          "Europu",
+          "SAD-u",
+          "Francuskoj",
+          "Indija",
+          "Europi",
+          "SAD",
+          "Srednji istok",
+          "Kina"
+        ],
+        "PER": [
+          "Nizozemcima",
+          "Hrvati"
+        ]
+      },
+      "custom": {
+        "PRODUCT": [
+          "Nvidia HGX H200",
+          "Core42",
+          "Nvidia GB200 NVL72",
+          "GB200 NVL72",
+          "Nvidijinom GB200 NVL72"
+        ],
+        "TECH": [
+          "DeepSeek AI-jev DeepSeek-R1",
+          "AI",
+          "Nvidia Blackwell GPU-a",
+          "Moonshot AI-jev",
+          "Imagination DXD GPU",
+          "Together AI",
+          "OpenAI-jev gpt-oss-120B",
+          "Mistral AI-jev Mistral Large 3"
+        ]
+      }
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Sci-Tech/Znanost/Posljednji-poziv-za-prijavu-na-ESA-staziranje-2026",
+    "title": "Posljednji poziv za prijavu na ESA stažiranje 2026",
+    "entities": {
+      "standard": {
+        "ORG": [
+          "ESA-e",
+          "Google",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Googlea",
+          "Strojarstvo optika",
+          "Europskoj svemirskoj agenciji",
+          "Facebooku",
+          "DIP Državno izborno povjerenstvo",
+          "Eneco",
+          "Nerdalize",
+          "ESA-in",
+          "ESA"
+        ],
+        "LOC": [
+          "Europe",
+          "Hrvatskoj",
+          "Hrvatska",
+          "Japanu",
+          "SAD-u",
+          "Francuskoj",
+          "Indija",
+          "Europi",
+          "Srednji istok",
+          "Kina"
+        ],
+        "MISC": [
+          "Borderlandsu 3",
+          "Pact"
+        ],
+        "PER": [
+          "Nizozemcima",
+          "Hrvati"
+        ]
+      },
+      "custom": {}
+    }
+  },
+  {
+    "url": "https://www.vidi.hr/Non-Tech/Svijet/Microsoft-NVIDIA-i-Anthropic-ulaze-u-partnerstvo",
+    "title": "Microsoft, NVIDIA i Anthropic ulaze u partnerstvo",
+    "entities": {
+      "standard": {
+        "ORG": [
+          "Google",
+          "NVIDIA",
+          "ABC",
+          "Anthropicovim",
+          "Nerdalize",
+          "Copilot Studio",
+          "Savezna agencija za mrežne djelatnosti BNetzA",
+          "Facebooku",
+          "FX",
+          "Eneco",
+          "ESPN",
+          "Microsoft",
+          "Anthropic",
+          "GitHub Copilot",
+          "Googlea",
+          "Disney",
+          "DIP Državno izborno povjerenstvo",
+          "Microsoftovoj",
+          "YouTube"
+        ],
+        "PER": [
+          "Claude Haiku",
+          "Claude",
+          "Anthropic",
+          "Nizozemcima",
+          "Claude AI",
+          "Vera Rubin",
+          "Hrvati"
+        ],
+        "MISC": [
+          "TCO",
+          "Microsoft Azureu",
+          "Anthropic",
+          "Copilot obitelji",
+          "Claude modelima",
+          "NVIDIA",
+          "Pact",
+          "Borderlandsu 3",
+          "Microsoft 365 Copilot",
+          "Claude Opus 4.1",
+          "Claude Sonnet 4.5",
+          "Anthropica",
+          "NVIDIA Grace Blackwell",
+          "Azurea",
+          "Claudeu",
+          "Microsoft Foundryja"
+        ],
+        "DERIV-PER": [
+          "Anthropicova"
+        ],
+        "LOC": [
+          "Anthropic",
+          "Hrvatskoj",
+          "Japanu",
+          "SAD-u",
+          "Francuskoj",
+          "Indija",
+          "Europi",
+          "Srednji istok",
+          "Kina"
+        ]
+      },
+      "custom": {
+        "TECH": [
+          "Claude Haiku",
+          "Claude modelima",
+          "Claude AI"
+        ],
+        "PRODUCT": [
+          "Microsoft 365 Copilot"
+        ]
+      }
+    }
+  }
+]

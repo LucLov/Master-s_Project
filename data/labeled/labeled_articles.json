@@ -1,0 +1,17 @@
+[
+  {"id": 1, "labels": ["BUSINESS", "TECH"]},
+  {"id": 2, "labels": ["AI", "BUSINESS"]},
+  {"id": 3, "labels": ["AI", "TECH"]},
+  {"id": 4, "labels": ["SPACE", "TECH"]},
+  {"id": 5, "labels": ["SPACE"]},
+  {"id": 6, "labels": ["TECH"]},
+  {"id": 7, "labels": ["TECH", "BUSINESS"]},
+  {"id": 8, "labels": ["SCIENCE"]},
+  {"id": 9, "labels": ["OTHER"]},
+  {"id": 10, "labels": ["SPACE", "SCIENCE"]},
+  {"id": 11, "labels": ["TECH"]},
+  {"id": 12, "labels": ["BUSINESS"]},
+  {"id": 13, "labels": ["TECH", "BUSINESS"]},
+  {"id": 14, "labels": ["SPACE"]},
+  {"id": 15, "labels": ["CYBERSEC", "TECH"]}
+]
