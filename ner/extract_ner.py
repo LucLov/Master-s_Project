@@ -8,10 +8,10 @@ OUTPUT_FILE = "data/processed/vidi_ner.json"
 
 
 TECH_KEYWORDS = [
-    "AI", "umjetna inteligencija", "LLM", "model", "neuronska mreža",
+    "AI", "UI", "artificial intelligence", "umjetna inteligencija", "LLM", "model", "neuronska mreža",
     "strojno učenje", "algoritam", "procesor", "računalo", "server",
-    "GPU", "CPU", "robot", "aplikacija", "softver", "hardver",
-    "čip", "platforma", "kvantno", "tehnologija"
+    "GPU", "CPU", "robot", "dron", "aplikacija", "softver", "hardver",
+    "čip", "platforma", "kvantno", "tehnologija", "računanje", "optimizacija"
 ]
 
 PRODUCT_PATTERNS = [
@@ -44,13 +44,7 @@ def guess_custom_category(ent_type, text):
         if ew.lower() in text.lower():
             return "EVENT"
 
-    # Ako se ništa ne uklapa → vrati None
     return None
-
-
-# ------------------------------
-# MAIN PIPELINE
-# ------------------------------
 
 def main():
     print("[NER] Loading Classla pipeline...")
@@ -70,8 +64,8 @@ def main():
         text = art["content"]
         doc = nlp(text)
 
-        standard = defaultdict(set)  # PER, ORG, LOC, MISC...
-        custom = defaultdict(set)    # TECH, PRODUCT, EVENT...
+        standard = defaultdict(set)
+        custom = defaultdict(set)
 
         for ent in doc.ents:
             raw = ent.text.strip()
@@ -80,19 +74,11 @@ def main():
             if len(raw) < 2:
                 continue
 
-            # ------------------
-            # STANDARD ENTITIES
-            # ------------------
             standard[ent_type].add(raw)
-
-            # ------------------
-            # CUSTOM ENTITIES
-            # ------------------
             mycat = guess_custom_category(ent_type, raw)
             if mycat:
                 custom[mycat].add(raw)
 
-        # Convert sets → lists
         standard = {k: list(v) for k, v in standard.items()}
         custom = {k: list(v) for k, v in custom.items()}
 

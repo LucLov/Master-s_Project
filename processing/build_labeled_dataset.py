@@ -4,10 +4,6 @@ from sentence_transformers import SentenceTransformer, util
 INPUT_FILE = "data/processed/vidi_clean.json"
 OUTPUT_FILE = "data/labeled/final_dataset.json"
 
-# ------------------------------------------
-# DEFINICIJE LABELA
-# ------------------------------------------
-
 LABELS = {
     "TECH": [
         "tehnologija", "procesor", "računalo", "hardver", "softver",
@@ -15,7 +11,8 @@ LABELS = {
         "GPU", "CPU", "smartphone", "robot"
     ],
     "AI": [
-        "AI", "umjetna inteligencija", "model", "LLM", "neuronska mreža",
+        "AI", "artificial intelligence", "UI", "umjetna inteligencija", "model", 
+        "LLM", "neuronska mreža", "deep seek", "generativni model"
         "machine learning", "deep learning"
     ],
     "BUSINESS": [
@@ -24,15 +21,17 @@ LABELS = {
     ],
     "SCIENCE": [
         "znanost", "istraživanje", "eksperiment", "fizika", "kemija",
-        "biologija", "laboratorij"
+        "biologija", "laboratorij", "proučavanje"
     ],
     "SPACE": [
         "NASA", "ESA", "svemir", "raketa", "misija", "astronaut", "teleskop",
-        "planet", "Mjesec", "Mars"
+        "planet", "mjesec", "satelit", "zvijezda", "galaksija", 
+        "Mjesec", "Mars", "Venera", "Zemlja", "Jupiter", "Saturn"
     ],
     "CYBERSEC": [
-        "sigurnost", "cyber", "kibernetički", "napad", "haker", "enkripcija",
-        "ranjivost"
+        "sigurnost", "informatička sigurnost", "cyber", "kibernetički", "napad", 
+        "haker", "enkripcija", "dekripcija", "ranjivost", "prijetnja", "protokoli",
+        "zaštita", "virus"
     ]
 }
 
@@ -40,7 +39,6 @@ LABELS = {
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 def get_embedding_label(text):
-    """Embedding klasifikacija – bira NAJBLIŽU kategoriju samo ako je vrlo sigurna."""
     text_emb = model.encode(text, convert_to_tensor=True)
 
     best_label = None
@@ -61,8 +59,6 @@ def get_embedding_label(text):
 
 
 def auto_label(article):
-    """Dodjeljuje više labela kombinacijom heuristike, NER-a i embeddingsa."""
-
     text = (article["title"] + " " + article["content"]).lower()
     assigned = set()
 
