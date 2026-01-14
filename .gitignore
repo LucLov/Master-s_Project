@@ -1,15 +1,21 @@
-venv/
-venv_nlp/
+# virtualenvs
 venv_data/
-dipl_venv/
-.env
+venv_nlp/
 
+# python
 __pycache__/
 *.pyc
 
-.vscode/
-.DS_Store/
-
+# data & outputs (HF is source of truth)
 data/
+scraping/outputs/
+debug_explain.txt
+
+# models / artifacts
 *.pkl
 *.joblib
+
+# env / ide
+.env
+.vscode/
+.DS_Store

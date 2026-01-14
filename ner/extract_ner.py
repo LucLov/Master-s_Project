@@ -4,8 +4,7 @@ import re
 from collections import defaultdict
 
 INPUT_FILE = "data/processed/vidi_clean.json"
-OUTPUT_FILE = "data/processed/vidi_ner.json"
-
+OUTPUT_FILE = "data/processed/vidi_lemmas.json"  # novo
 
 TECH_KEYWORDS = [
     "AI", "UI", "artificial intelligence", "umjetna inteligencija", "LLM", "model", "neuronska mreža",
@@ -21,37 +20,52 @@ PRODUCT_PATTERNS = [
     r"[A-Z][A-Za-z0-9\-]+\s?(Pro|Ultra|Max|Lite)"
 ]
 
-EVENT_KEYWORDS = [
-    "konferencija", "sajam", "summit", "forum", "dani", "expo"
-]
-
+EVENT_KEYWORDS = ["konferencija", "sajam", "summit", "forum", "dani", "expo"]
 
 def guess_custom_category(ent_type, text):
-    """Mapira standardne entitete u tvoje custom kategorije."""
-
-    # --- PRODUCT ---
     for patt in PRODUCT_PATTERNS:
         if re.search(patt, text):
             return "PRODUCT"
-
-    # --- TECH ---
     for kw in TECH_KEYWORDS:
         if kw.lower() in text.lower():
             return "TECH"
-
-    # --- EVENT ---
     for ew in EVENT_KEYWORDS:
         if ew.lower() in text.lower():
             return "EVENT"
-
     return None
 
+def entity_lemma(ent):
+    try:
+        lemmas = []
+        for tok in ent.tokens:
+            if tok.words and tok.words[0].lemma:
+                lemmas.append(tok.words[0].lemma)
+            else:
+                lemmas.append(tok.text)
+        lemma = " ".join(lemmas).strip()
+        return lemma if lemma else ent.text.strip()
+    except Exception:
+        return ent.text.strip()
+
+def add_ent(store: dict, ent_type: str, surface: str, lemma: str):
+    key = (surface, lemma)
+    store[ent_type].add(key)
+
+def doc_lemmas(doc) -> list[str]:
+    """Extract lemmas from whole doc (all tokens), lowercase, no punct."""
+    out = []
+    for sent in doc.sentences:
+        for w in sent.words:
+            if w.upos != "PUNCT" and w.lemma:
+                out.append(w.lemma.lower())
+    return out
+
 def main():
-    print("[NER] Loading Classla pipeline...")
+    print("[LEMMA+NER] Loading Classla pipeline...")
 
     nlp = classla.Pipeline(
         lang="hr",
-        processors="tokenize,ner",
+        processors="tokenize,pos,lemma,ner",
         logging_level="WARNING"
     )
 
@@ -61,41 +75,54 @@ def main():
     results = []
 
     for art in articles:
-        text = art["content"]
-        doc = nlp(text)
+        title = art.get("title", "") or ""
+        content = art.get("content", "") or ""
+
+        # process title + content separately (title is short)
+        doc_title = nlp(title)
+        doc_content = nlp(content)
 
         standard = defaultdict(set)
         custom = defaultdict(set)
 
-        for ent in doc.ents:
-            raw = ent.text.strip()
-            ent_type = ent.type
-
-            if len(raw) < 2:
+        # NER over content (obično je dovoljno); ako želiš i title, možeš spojiti i doc_title.ents
+        for ent in doc_content.ents:
+            surface = ent.text.strip()
+            if len(surface) < 2:
                 continue
+            lemma = entity_lemma(ent)
 
-            standard[ent_type].add(raw)
-            mycat = guess_custom_category(ent_type, raw)
+            add_ent(standard, ent.type, surface, lemma)
+
+            mycat = guess_custom_category(ent.type, surface)
             if mycat:
-                custom[mycat].add(raw)
+                add_ent(custom, mycat, surface, lemma)
 
-        standard = {k: list(v) for k, v in standard.items()}
-        custom = {k: list(v) for k, v in custom.items()}
+        standard_out = {
+            k: [{"surface": s, "lemma": l} for (s, l) in sorted(v)]
+            for k, v in standard.items()
+        }
+        custom_out = {
+            k: [{"surface": s, "lemma": l} for (s, l) in sorted(v)]
+            for k, v in custom.items()
+        }
 
         results.append({
-            "url": art["url"],
-            "title": art["title"],
+            "url": art.get("url", ""),
+            "title": title,
+            "content": content,
+            "lemmas_title": doc_lemmas(doc_title),
+            "lemmas_content": doc_lemmas(doc_content),
             "entities": {
-                "standard": standard,
-                "custom": custom
+                "standard": standard_out,
+                "custom": custom_out
             }
         })
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
-    print(f"[DONE] NER extracted → {OUTPUT_FILE}")
-
+    print(f"[DONE] Lemmas+NER extracted → {OUTPUT_FILE}")
 
 if __name__ == "__main__":
     main()

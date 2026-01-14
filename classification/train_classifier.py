@@ -15,7 +15,11 @@ def main():
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    texts = [d["content"] for d in data]
+    # MINIMAL CHANGE: train on title + content (not only content)
+    texts = [
+        f"{(d.get('title') or '').strip()}\n{(d.get('content') or '').strip()}".strip()
+        for d in data
+    ]
     labels = [d["labels"] for d in data]
 
     # TF-IDF

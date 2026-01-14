@@ -1,58 +1,52 @@
+import argparse
 import os
-import shutil
 import subprocess
+import sys
 
+def run(desc: str, cmd: list[str]):
+    print(f"=== {desc} ===")
+    r = subprocess.run(cmd)
+    if r.returncode != 0:
+        print(f"❌ ERROR: {desc}")
+        sys.exit(1)
+    print(f"✓ DONE: {desc}\n")
 
-def run_step(description, command):
-    print(f"=== Running: {description} ===")
-    result = subprocess.run(command, shell=True)
-    if result.returncode != 0:
-        print(f"❌ ERROR in step: {description}")
-        exit(1)
-    print(f"✓ DONE: {description}\n")
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--update-data", action="store_true")
+    parser.add_argument("--repo-id", default="lucijalovric/vidi-news-dataset")
+    parser.add_argument("--config", default="clean", help="raw ili clean (koristi se u NLP pull)")
+    parser.add_argument("--push-after", action="store_true", help="pushaj HF dataset na kraju")
+    args, unknown = parser.parse_known_args()
 
+    py_data = r"venv_data\Scripts\python.exe"
+    py_nlp  = r"venv_nlp\Scripts\python.exe"
 
-print("=== PIPELINE START ===\n")
+    if not os.path.exists(py_data):
+        print(f"❌ Missing: {py_data}")
+        sys.exit(1)
+    if not os.path.exists(py_nlp):
+        print(f"❌ Missing: {py_nlp}")
+        sys.exit(1)
 
-# -------------------------
-# 1. SCRAPING (VIDI)
-# -------------------------
-run_step("scrape_vidi.py", "python scraping/scrape_vidi.py")
+    if args.update_data:
+        run(
+            "DATA pipeline (scrape/preprocess/push)",
+            [py_data, r"pipelines\run_data_pipeline.py", "--repo-id", args.repo_id]
+        )
+    else:
+        print("=== Skipping DATA pipeline (using Hugging Face dataset) ===\n")
 
-# 1.5 Copy scraped file to data/raw/
-src = "scraping/outputs/vidi_articles.json"
-dst = "data/raw/vidi_raw.json"
+    cmd = [py_nlp, r"pipelines\run_nlp_pipeline.py", "--repo-id", args.repo_id, "--config", args.config] + unknown
+    run("NLP pipeline (pull/NER/train/predict)", cmd)
 
-if not os.path.exists(src):
-    print(f"❌ ERROR: {src} ne postoji — scraping nije uspio!")
-    exit(1)
+    if args.push_after:
+        push_cmd = [py_data, r"hf/push_dataset.py", "--repo_id", args.repo_id]
+        if not args.update_data:
+            push_cmd += ["--skip-raw"]  # ✅ bitno u HF-only modu
+        run("PUSH updated dataset to Hugging Face (after NLP)", push_cmd)
 
-shutil.copy(src, dst)
-print(f"✓ DONE: Copied {src} → {dst}\n")
+    print("=== PIPELINE COMPLETE ===")
 
-# -------------------------
-# 2. PREPROCESS
-# -------------------------
-run_step("preprocess_articles.py", "python processing/preprocess_articles.py")
-
-# -------------------------
-# 3. NER
-# -------------------------
-run_step("extract_ner.py", "python ner/extract_ner.py")
-
-# -------------------------
-# 4. BUILD LABELED DATASET (AUTO-LABELING)
-# -------------------------
-run_step("build_labeled_dataset.py", "python processing/build_labeled_dataset.py")
-
-# -------------------------
-# 5. TRAIN CLASSIFIER (EMBEDDING MODEL)
-# -------------------------
-run_step("train_classifier.py", "python classification/train_classifier.py")
-
-# -------------------------
-# 6. PREDICT
-# -------------------------
-run_step("predict.py", "python classification/predict.py")
-
-print("\n=== PIPELINE COMPLETE ===")
+if __name__ == "__main__":
+    main()
