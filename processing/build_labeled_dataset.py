@@ -15,7 +15,7 @@ DEBUG_EXPLAIN_FILE = "debug_explain.txt"
 
 
 # ----------------------------
-# STRICT surface matching (no substrings) + folding
+# does NFKD normalization + lowercasing, diacritic-insensitive
 # ----------------------------
 def _fold(s: str) -> str:
     s = s or ""
@@ -23,13 +23,10 @@ def _fold(s: str) -> str:
     s = "".join(ch for ch in s if not unicodedata.combining(ch))
     return s.lower()
 
-
+# ----------------------------
+# whole-word / whole-phrase matching, case-insensitive, diacritic-insensitive
+# ----------------------------
 def match_kw(text: str, kw: str) -> bool:
-    """
-    Case-insensitive, whole-word / whole-phrase match on surface text.
-    - prevents: 'esa' matching inside 'mesa'
-    - phrase: 'pametni sat' must appear as a separate phrase
-    """
     kw = (kw or "").strip()
     if not text or not kw:
         return False
@@ -62,13 +59,11 @@ def get_kw_nlp():
         )
     return _NLP
 
-
+# ----------------------------
+# lemmatize a keyword (word or phrase) using Classla, cache results, to match article lemmas
+# ----------------------------
 @lru_cache(maxsize=4096)
 def kw_to_lemma_parts(kw: str) -> list[str]:
-    """
-    Lemmatize a keyword (word or phrase) using Classla, to match article lemmas.
-    No overrides, no hardcoded special cases.
-    """
     kw = (kw or "").strip()
     if not kw:
         return []
@@ -81,14 +76,12 @@ def kw_to_lemma_parts(kw: str) -> list[str]:
                 out.append(w.lemma.lower())
     return out
 
-
+# ----------------------------
+# Strict match over lemmas:
+#    word: must exist as lemma token
+#    phrase: contiguous sequence of lemma tokens must exist
+# ----------------------------
 def match_kw_lemmas(lemmas: list[str], kw: str) -> bool:
-    """
-    Strict match over lemmas:
-    - word: must exist as lemma token
-    - phrase: contiguous sequence of lemma tokens must exist
-    Keyword is lemmatized via classla.
-    """
     if not lemmas:
         return False
 
@@ -107,13 +100,12 @@ def match_kw_lemmas(lemmas: list[str], kw: str) -> bool:
             return True
     return False
 
-
+# ----------------------------
+# Match keyword either:
+#    - surface strict, OR
+#    - lemma strict (classla keyword lemmatization)
+# ----------------------------
 def match_kw_any(title: str, content: str, title_lem: list[str], content_lem: list[str], kw: str) -> bool:
-    """
-    Match keyword either:
-    - surface strict, OR
-    - lemma strict (classla keyword lemmatization)
-    """
     if match_kw(title, kw) or match_kw(content, kw):
         return True
     if match_kw_lemmas(title_lem, kw) or match_kw_lemmas(content_lem, kw):
@@ -128,13 +120,10 @@ def count_hits(title: str, content: str, title_lem: list[str], content_lem: list
 # ----------------------------
 # Evidence helper: show actual surface forms for lemma matches
 # (keeps your output structure; only improves "hit list")
+# Build a surface pattern that matches inflected Croatian forms.
+# Used ONLY to display what matched in evidence (not for scoring).
 # ----------------------------
 def _kw_to_flex_surface_pattern(kw: str) -> str | None:
-    """
-    Build a surface pattern that matches inflected Croatian forms.
-    Used ONLY to display what matched in evidence (not for scoring).
-    Example: "računalni virus" matches "računalnih virusa".
-    """
     kw = (kw or "").strip()
     if not kw:
         return None
@@ -150,13 +139,11 @@ def _kw_to_flex_surface_pattern(kw: str) -> str | None:
 
     return r"\b" + r"\s+".join([rf"{re.escape(st)}\w*" for st in stems]) + r"\b"
 
-
+# ----------------------------
+# Return first matched surface substring from the ORIGINAL text
+# Works on folded text for matching, uses spans to slice original
+# ----------------------------
 def find_surface_hit(text: str, kw: str) -> str | None:
-    """
-    Return first matched surface substring from the ORIGINAL text (so you see real form).
-    Works on folded text for matching, uses spans to slice original.
-    (Note: with unicodedata folding, spans can be off in rare cases; usually OK for cro diacritics.)
-    """
     text = text or ""
     patt = _kw_to_flex_surface_pattern(kw)
     if not text or not patt:
@@ -258,12 +245,10 @@ def get_embedding_label(text: str, threshold: float) -> str | None:
 
 # ----------------------------
 # Explainability helpers
+# Keep your previous evidence structure (lists of strings),
+# but if a hit happens only via lemmas, try to display the real surface form.
 # ----------------------------
 def _top_kw_hits_any(title: str, content: str, title_lem: list[str], content_lem: list[str], kws: list[str]) -> dict:
-    """
-    Keep your previous evidence structure (lists of strings),
-    but if a hit happens only via lemmas, try to display the real surface form.
-    """
     title_hits = []
     content_hits = []
 
@@ -271,7 +256,6 @@ def _top_kw_hits_any(title: str, content: str, title_lem: list[str], content_lem
         if match_kw(title, kw):
             title_hits.append(kw)
         elif match_kw_lemmas(title_lem, kw):
-            # show actual form if possible (e.g. "računalnih virusa")
             surf = find_surface_hit(title, kw)
             title_hits.append(surf if surf else kw)
 

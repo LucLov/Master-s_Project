@@ -4,7 +4,7 @@ import re
 from collections import defaultdict
 
 INPUT_FILE = "data/processed/vidi_clean.json"
-OUTPUT_FILE = "data/processed/vidi_lemmas.json"  # novo
+OUTPUT_FILE = "data/processed/vidi_lemmas.json"
 
 TECH_KEYWORDS = [
     "AI", "UI", "artificial intelligence", "umjetna inteligencija", "LLM", "model", "neuronska mreža",
@@ -85,7 +85,7 @@ def main():
         standard = defaultdict(set)
         custom = defaultdict(set)
 
-        # NER over content (obično je dovoljno); ako želiš i title, možeš spojiti i doc_title.ents
+        # NER over content (obično je dovoljno)
         for ent in doc_content.ents:
             surface = ent.text.strip()
             if len(surface) < 2:

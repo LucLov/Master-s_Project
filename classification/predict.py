@@ -12,13 +12,13 @@ SHOW_TOP_PROBS = True
 SHOW_ML_TOKEN_EXPLAIN = True
 
 SHOW_HEURISTIC_EXPLAIN = True
-SHOW_LEMMAS_DEBUG = False          # <-- uključi ako želiš vidjeti lemme iz unosa
+SHOW_LEMMAS_DEBUG = False
 
 SHOW_DISAGREEMENT_NOTE = True
 
 # ML fallback: ako je max proba preniska -> OTHER
 ENABLE_OTHER_FALLBACK = True
-OTHER_THRESHOLD = 0.55  # po potrebi podesi (0.50-0.70)
+OTHER_THRESHOLD = 0.55
 # ---------------------------------------------------------------
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
