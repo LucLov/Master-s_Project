@@ -1,0 +1,44 @@
+EVALUATION (proxy ground truth = heurističke labele)
+
+{
+  "n_total": 79,
+  "n_test": 16,
+  "label_distribution_total": {
+    "SCIENCE": 25,
+    "TECH": 44,
+    "SPACE": 14,
+    "BUSINESS": 28,
+    "AI": 36,
+    "OTHER": 5,
+    "CYBERSEC": 8
+  },
+  "f1_micro": 0.6956521739130435,
+  "f1_macro": 0.32653061224489793,
+  "precision_micro": 1.0,
+  "recall_micro": 0.5333333333333333,
+  "hamming_loss": 0.125,
+  "subset_accuracy": 0.3125,
+  "diagnostics": {
+    "avg_max_prob": 0.5866452098992327,
+    "median_max_prob": 0.6252741824823764,
+    "min_max_prob": 0.41967369723226117,
+    "max_max_prob": 0.7125281557407344
+  }
+}
+
+PER-LABEL REPORT
+
+              precision    recall  f1-score   support
+
+          AI       1.00      1.00      1.00         5
+    BUSINESS       1.00      0.17      0.29         6
+    CYBERSEC       0.00      0.00      0.00         1
+       OTHER       0.00      0.00      0.00         1
+     SCIENCE       0.00      0.00      0.00         4
+       SPACE       0.00      0.00      0.00         3
+        TECH       1.00      1.00      1.00        10
+
+   micro avg       1.00      0.53      0.70        30
+   macro avg       0.43      0.31      0.33        30
+weighted avg       0.70      0.53      0.56        30
+ samples avg       0.69      0.51      0.57        30

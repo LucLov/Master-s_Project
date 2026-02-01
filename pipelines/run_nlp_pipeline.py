@@ -41,6 +41,7 @@ def main():
     )
 
     run_step("train_classifier.py", [py, "classification/train_classifier.py"])
+    run_step("evaluate.py", [py, "classification/evaluate.py", "--save_reports"])
     run_step("predict.py", [py, "classification/predict.py"])
 
     print("\n=== NLP PIPELINE COMPLETE ===")

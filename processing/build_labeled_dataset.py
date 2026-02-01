@@ -1,7 +1,9 @@
 import argparse
 import json
+import os
 import re
 import unicodedata
+import math
 from collections import defaultdict
 from functools import lru_cache
 
@@ -13,6 +15,49 @@ OUTPUT_FILE = "data/labeled/final_dataset.json"
 DEBUG_EXPLAIN = True
 DEBUG_EXPLAIN_FILE = "debug_explain.txt"
 
+#STRONG_PATH = "data/analysis/strong_indicators.json"
+
+# ----------------------------
+# Embedding boost settings
+# ----------------------------
+# Embedding is a *weak* semantic prior: it can only reinforce existing heuristic evidence.
+# Multiplicative boost factor: score *= (1 + K_EMB_MULT)
+K_EMB_MULT = 0.15
+
+# ----------------------------
+# Score normalization: raw -> (0,1), asymptotically to 1
+# ----------------------------
+SCORE01_K = 0.7
+
+
+
+
+#def load_strong_terms(path: str) -> dict[str, list[str]]:
+#    if not os.path.exists(path):
+#        print(f"⚠ Missing {path}, using hardcoded *_STRONG lists")
+#        return {}
+#    with open(path, "r", encoding="utf-8") as f:
+#        raw = json.load(f)
+#
+#    out = {}
+#    for label, obj in (raw or {}).items():
+#        if isinstance(obj, dict):
+#            out[label.upper()] = obj.get("strong_terms", []) or []
+#    return out
+#
+#STRONG_TERMS = load_strong_terms(STRONG_PATH)
+
+
+def to_score01(raw: float, k: float = SCORE01_K) -> float:
+    raw = 0.0 if raw is None else float(raw)
+    if raw <= 0.0:
+        return 0.0
+    return 1.0 - math.exp(-k * raw)
+
+
+def squash_scores_01(raw_scores: dict[str, float], k: float = SCORE01_K) -> dict[str, float]:
+    return {lab: to_score01(sc, k=k) for lab, sc in raw_scores.items()}
+
 
 # ----------------------------
 # does NFKD normalization + lowercasing, diacritic-insensitive
@@ -23,6 +68,7 @@ def _fold(s: str) -> str:
     s = "".join(ch for ch in s if not unicodedata.combining(ch))
     return s.lower()
 
+
 # ----------------------------
 # whole-word / whole-phrase matching, case-insensitive, diacritic-insensitive
 # ----------------------------
@@ -31,7 +77,6 @@ def match_kw(text: str, kw: str) -> bool:
     if not text or not kw:
         return False
 
-    # diacritic-insensitive
     text_n = _fold(text)
     kw_n = _fold(kw)
 
@@ -59,6 +104,7 @@ def get_kw_nlp():
         )
     return _NLP
 
+
 # ----------------------------
 # lemmatize a keyword (word or phrase) using Classla, cache results, to match article lemmas
 # ----------------------------
@@ -75,6 +121,7 @@ def kw_to_lemma_parts(kw: str) -> list[str]:
             if w.upos != "PUNCT" and w.lemma:
                 out.append(w.lemma.lower())
     return out
+
 
 # ----------------------------
 # Strict match over lemmas:
@@ -100,6 +147,7 @@ def match_kw_lemmas(lemmas: list[str], kw: str) -> bool:
             return True
     return False
 
+
 # ----------------------------
 # Match keyword either:
 #    - surface strict, OR
@@ -119,8 +167,6 @@ def count_hits(title: str, content: str, title_lem: list[str], content_lem: list
 
 # ----------------------------
 # Evidence helper: show actual surface forms for lemma matches
-# (keeps your output structure; only improves "hit list")
-# Build a surface pattern that matches inflected Croatian forms.
 # Used ONLY to display what matched in evidence (not for scoring).
 # ----------------------------
 def _kw_to_flex_surface_pattern(kw: str) -> str | None:
@@ -139,10 +185,7 @@ def _kw_to_flex_surface_pattern(kw: str) -> str | None:
 
     return r"\b" + r"\s+".join([rf"{re.escape(st)}\w*" for st in stems]) + r"\b"
 
-# ----------------------------
-# Return first matched surface substring from the ORIGINAL text
-# Works on folded text for matching, uses spans to slice original
-# ----------------------------
+
 def find_surface_hit(text: str, kw: str) -> str | None:
     text = text or ""
     patt = _kw_to_flex_surface_pattern(kw)
@@ -175,10 +218,10 @@ LABELS = {
     ],
     "BUSINESS": [
         "poslovanje", "investicija", "ulaganje", "akvizicija", "tržište",
-        "upravljanje", "ekonomija", "financije", "profit"
+        "upravljanje", "ekonomija", "financije", "profit", "sastanak"
     ],
     "SCIENCE": [
-        "znanost", "istraživanje", "eksperiment", "fizika", "kemija", "biologija", 
+        "znanost", "istraživanje", "eksperiment", "fizika", "kemija", "biologija",
         "geofizika", "seizmologija", "laboratorij", "proučavanje", "istraživač", "promatrač"
     ],
     "SPACE": [
@@ -201,10 +244,10 @@ AI_STRONG = [
 ]
 
 BUSINESS_STRONG = [
-    "investicija", "ulaganje", "akvizicija", "preuzimanje", "spajanje",
-    "profit", "prihod", "zarada", "gubitak", "dionica", "dionice",
+    "investicija", "ulaganje", "akvizicija", "spajanje",
+    "profit", "prihod", "zarada", "gubitak", "dionica",
     "burza", "IPO", "tržište", "financije", "kredit", "kapital",
-    "poslovanje", "tvrtka", "kompanija"
+    "poslovanje"
 ]
 
 SPACE_STRONG = [
@@ -217,6 +260,9 @@ SPACE_WEAK = [
     "Mars", "Venera", "Zemlja", "Jupiter", "Saturn", "Mjesec"
 ]
 
+#AI_STRONG = STRONG_TERMS.get("AI", AI_STRONG)
+#BUSINESS_STRONG = STRONG_TERMS.get("BUSINESS", BUSINESS_STRONG)
+#SPACE_STRONG = STRONG_TERMS.get("SPACE", SPACE_STRONG)
 
 # ----------------------------
 # Embedding model
@@ -245,8 +291,6 @@ def get_embedding_label(text: str, threshold: float) -> str | None:
 
 # ----------------------------
 # Explainability helpers
-# Keep your previous evidence structure (lists of strings),
-# but if a hit happens only via lemmas, try to display the real surface form.
 # ----------------------------
 def _top_kw_hits_any(title: str, content: str, title_lem: list[str], content_lem: list[str], kws: list[str]) -> dict:
     title_hits = []
@@ -296,7 +340,6 @@ def explain_labels(
 
         scored = False
         for kw in kws:
-            # title stronger
             if match_kw(title, kw) or match_kw_lemmas(title_lem, kw):
                 scores[label] += 2.0
                 scored = True
@@ -323,7 +366,7 @@ def explain_labels(
         else:
             keyword_evidence[label]["scoring_trigger"] = None
 
-    # 2) embedding boost (UNCHANGED output structure)
+    # 2) embedding boost (weak prior, multiplicative)
     emb_scores = _embedding_scores(content)
     best_label = max(emb_scores.items(), key=lambda x: x[1])[0] if emb_scores else None
     best_score = emb_scores.get(best_label, None) if best_label else None
@@ -333,18 +376,20 @@ def explain_labels(
         "best_score": best_score,
         "threshold": threshold,
         "boost_applied": False,
-        "boost_points": 1.5,
+        "boost_points": f"×(1+{K_EMB_MULT})",
         "ranking": None
     }
 
     if include_embedding_ranking and emb_scores:
         embedding_evidence["ranking"] = sorted(emb_scores.items(), key=lambda x: x[1], reverse=True)
 
+    # IMPORTANT: only reinforce existing heuristic evidence
     if best_label is not None and best_score is not None and best_score >= threshold:
-        scores[best_label] += 1.5
-        embedding_evidence["boost_applied"] = True
+        if best_label in scores and scores[best_label] > 0.0:
+            scores[best_label] *= (1.0 + K_EMB_MULT)
+            embedding_evidence["boost_applied"] = True
 
-    # 3) gating / penalties (UNCHANGED)
+    # 3) gating / penalties
     gating_penalties: list[dict] = []
 
     if "AI" in scores:
@@ -423,12 +468,17 @@ def explain_labels(
                 "after": scores["SPACE"],
             })
 
-    # 4) select labels
+    # --- compute raw + normalized scores after all rules ---
+    raw_scores = dict(scores)
+    scores_01 = squash_scores_01(raw_scores)
+
+    # 4) select labels (RAW scoring)
     items = [(lab, sc) for lab, sc in scores.items() if sc > 0.0]
     if not items:
         result = {
             "selected_labels": ["OTHER"],
-            "final_scores": dict(scores),
+            "raw_scores": raw_scores,
+            "scores_01": scores_01,
             "keyword_evidence": keyword_evidence,
             "embedding_evidence": embedding_evidence,
             "gating_penalties": gating_penalties,
@@ -442,7 +492,8 @@ def explain_labels(
 
     result = {
         "selected_labels": selected,
-        "final_scores": dict(scores),
+        "raw_scores": raw_scores,
+        "scores_01": scores_01,
         "keyword_evidence": keyword_evidence,
         "embedding_evidence": embedding_evidence,
         "gating_penalties": gating_penalties,
@@ -451,7 +502,7 @@ def explain_labels(
     if not as_text:
         return result
 
-    # Pretty text output (KEEP SAME STRUCTURE AS YOUR CURRENT ONE)
+    # Pretty text output
     lines = []
     lines.append("=" * 80)
     lines.append(f"TITLE: {title}")
@@ -461,9 +512,18 @@ def explain_labels(
     lines.append("")
     lines.append(f"Selected labels: {', '.join(selected)}")
     lines.append("")
-    lines.append("Final scores (top):")
+
+    # RAW scores (top)
+    lines.append("Final scores (raw heuristic, top):")
     for lab, sc in sorted(items, key=lambda x: x[1], reverse=True)[:10]:
         lines.append(f"  - {lab}: {sc:.3f}")
+    lines.append("")
+
+    # Normalized scores (top) - same order as raw top
+    lines.append("Final scores (normalized 0–1, top):")
+    for lab, sc in sorted(items, key=lambda x: x[1], reverse=True)[:10]:
+        sc01 = scores_01.get(lab, 0.0)
+        lines.append(f"  - {lab}: {sc01:.3f}")
     lines.append("")
 
     lines.append("Keyword evidence (labels with hits):")
@@ -494,7 +554,7 @@ def explain_labels(
             f"  - best_label={embedding_evidence['best_label']}, best_score={embedding_evidence['best_score']:.3f}, threshold={embedding_evidence['threshold']:.3f}"
         )
         lines.append(
-            f"  - boost_applied={embedding_evidence['boost_applied']} (+{embedding_evidence['boost_points']})"
+            f"  - boost_applied={embedding_evidence['boost_applied']} ({embedding_evidence['boost_points']})"
         )
         if include_embedding_ranking and embedding_evidence["ranking"]:
             top5 = embedding_evidence["ranking"][:5]
@@ -535,10 +595,15 @@ def auto_label(article: dict, threshold: float, max_labels: int = 3) -> list[str
                 scores[label] += 1.0
                 break
 
-    # 2) embedding boost
-    emb_label = get_embedding_label(content, threshold=threshold)
-    if emb_label:
-        scores[emb_label] += 1.5
+    # 2) embedding boost (weak prior, multiplicative, only if label exists)
+    emb_scores = _embedding_scores(content)
+    if emb_scores:
+        best_label = max(emb_scores.items(), key=lambda x: x[1])[0]
+        best_score = emb_scores.get(best_label, None)
+
+        if best_score is not None and best_score >= threshold:
+            if best_label in scores and scores[best_label] > 0.0:
+                scores[best_label] *= (1.0 + K_EMB_MULT)
 
     # 3) gating / penalties
     if "AI" in scores:
@@ -560,7 +625,7 @@ def auto_label(article: dict, threshold: float, max_labels: int = 3) -> list[str
         if strong_hits < 1 and weak_hits < 2:
             scores["SPACE"] = 0.0
 
-    # 4) select labels
+    # 4) select labels (RAW scoring)
     items = [(lab, sc) for lab, sc in scores.items() if sc > 0.0]
     if not items:
         return ["OTHER"]

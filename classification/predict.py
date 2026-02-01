@@ -18,7 +18,7 @@ SHOW_DISAGREEMENT_NOTE = True
 
 # ML fallback: ako je max proba preniska -> OTHER
 ENABLE_OTHER_FALLBACK = True
-OTHER_THRESHOLD = 0.55
+OTHER_THRESHOLD = 0.40
 # ---------------------------------------------------------------
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
